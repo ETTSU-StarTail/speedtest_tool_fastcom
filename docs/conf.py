@@ -6,10 +6,6 @@ from __future__ import annotations
 import os
 import sys
 
-import sphinx
-import sphinx.application
-from recommonmark.transform import AutoStructify
-
 # Configuration file for the Sphinx documentation builder.
 #
 # This file only contains a selection of the most common options. For a full
@@ -43,10 +39,10 @@ extensions: list[str] = [
     "sphinx.ext.viewcode",
     "sphinx.ext.todo",
     "sphinx.ext.autosummary",
-    "recommonmark",
     "sphinx_markdown_tables",
     "sphinxcontrib.blockdiag",
     "sphinxcontrib.actdiag",
+    "myst_parser",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -76,16 +72,3 @@ html_theme: str = "sphinx_material"
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path: list[str] = ["_static"]
-
-# recommonmark
-
-
-def setup(app: sphinx.application.Sphinx):
-    app.add_config_value(
-        "recommonmark_config",
-        {
-            "auto_toc_tree_section": "Contents",
-        },
-        True,
-    )
-    app.add_transform(AutoStructify)
