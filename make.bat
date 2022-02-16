@@ -7,8 +7,8 @@ REM Command file for Sphinx documentation
 if "%SPHINXBUILD%" == "" (
 	set SPHINXBUILD=sphinx-build
 )
-set SOURCEDIR=source
-set BUILDDIR=doc
+set SOURCEDIR=docs
+set BUILDDIR=build
 
 if "%1" == "" goto help
 
@@ -24,6 +24,9 @@ if errorlevel 9009 (
 	echo.https://www.sphinx-doc.org/
 	exit /b 1
 )
+
+REM sphinx-apidoc もここでしちゃえ
+sphinx-apidoc -f -o .\docs\ .\speedtest_tool_fastcom\ .\tests
 
 %SPHINXBUILD% -M %1 %SOURCEDIR% %BUILDDIR% %SPHINXOPTS% %O%
 goto end

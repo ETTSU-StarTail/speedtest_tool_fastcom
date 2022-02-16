@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "speedtest_tool-fastcom"
+name = "speedtest_tool_fastcom"
 version = "0.1.0"
 description = "speedtest_tool の fast.com 版"
 authors = ["ETTSU-StarTail <46245666+ETTSU-StarTail@users.noreply.github.com>"]
@@ -24,6 +24,7 @@ recommonmark = "^0.7.1"
 sphinx-markdown-tables = "^0.0.15"
 sphinxcontrib-blockdiag = "^3.0.0"
 sphinxcontrib-actdiag = "^3.0.0"
+sphinx-material = "^0.0.35"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
