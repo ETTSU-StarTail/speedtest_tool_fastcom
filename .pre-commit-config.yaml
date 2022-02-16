@@ -21,12 +21,6 @@ repos:
           - id: mypy
             args: [--ignore-missing-imports]
 
-    - repo: https://github.com/psf/black
-      rev: 21.10b0
-      hooks:
-          - id: black
-            language_version: python3
-
     - repo: https://gitlab.com/pycqa/flake8
       rev: 3.9.2
       hooks:
@@ -51,3 +45,9 @@ repos:
                     flake8-expression-complexity,
                     flake8-cognitive-complexity,
                 ]
+
+    - repo: https://github.com/psf/black
+      rev: 21.10b0
+      hooks:
+          - id: black
+            language_version: python3
