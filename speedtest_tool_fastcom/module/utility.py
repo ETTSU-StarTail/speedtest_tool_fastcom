@@ -39,7 +39,7 @@ def change_order(value: float, value_prefix: ValuePrefix) -> float:
         float: オーダー変換した数値
     """
 
-    return value / 10 ** value_prefix.value
+    return value / 10**value_prefix.value
 
 
 def round_datetime(dt: datetime) -> datetime:
