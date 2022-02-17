@@ -19,12 +19,12 @@ logging.config.dictConfig(
         "handlers": {
             "streamHandler": {
                 "class": "logging.StreamHandler",
-                "level": logging.DEBUG,
+                "level": logging.INFO,
                 "formatter": "basicFormatter",
             },
             "fileHandler": {
                 "class": "logging.handlers.TimedRotatingFileHandler",
-                "level": logging.DEBUG,
+                "level": logging.INFO,
                 "formatter": "basicFormatter",
                 "filename": "speedtest.log",
                 "when": "MIDNIGHT",
@@ -32,7 +32,7 @@ logging.config.dictConfig(
         },
         "root": {
             "handlers": ["fileHandler"],
-            "level": logging.DEBUG,
+            "level": logging.INFO,
         },
         "loggers": {
             "basicLogger": {
@@ -53,8 +53,8 @@ logger = logging.getLogger("basicLogger")
 
 
 def call_temp() -> None:
-    print(f"called {__name__}.")
+    log_manager.logger.info(f"called {__name__}.")
 
 
 if __name__ == "__main__":
-    print(f"{__file__} はモジュールをインポートして使ってください。")
+    log_manager.logger.info(f"{__file__} はモジュールをインポートして使ってください。")
