@@ -2,7 +2,10 @@ from __future__ import annotations
 
 from datetime import date, datetime
 
+from speedtest_tool_fastcom.module import log_manager, utility
 
+
+@utility.recording
 def make_network_speed_graph(
     save_path: str,
     measure_date: date,
@@ -19,8 +22,8 @@ def make_network_speed_graph(
 
 
 def call_temp() -> None:
-    print(f"called {__name__}.")
+    log_manager.logger.info(f"called {__name__}.")
 
 
 if __name__ == "__main__":
-    print(f"{__file__} はモジュールをインポートして使ってください。")
+    log_manager.logger.info(f"{__file__} はモジュールをインポートして使ってください。")

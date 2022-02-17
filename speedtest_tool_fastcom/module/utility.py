@@ -1,5 +1,13 @@
+from __future__ import annotations
+
+import functools
+
 from datetime import datetime, timedelta
 from enum import Enum
+import inspect
+from typing import Any
+
+from speedtest_tool_fastcom.module import log_manager
 
 
 class ValuePrefix(Enum):
@@ -15,6 +23,44 @@ class ValuePrefix(Enum):
     T = 12
 
 
+def recording(f: Any) -> Any:
+    """関数 (メソッド) の呼び出しを記録するデコレータです。
+
+    受け取ったパラメータと返り値をログに出力します。
+
+    https://blog.amedama.jp/entry/2016/10/31/225219
+
+    Args:
+        f (Any): 関数
+
+    Returns:
+        Any: 結果
+    """
+
+    @functools.wraps(f)
+    def _recording(*args: Any, **kwargs: Any) -> Any:
+        # 表面上は元々の関数 (メソッド) がそのまま実行されたように振る舞う
+        result = f(*args, **kwargs)
+        # デコレーションする関数のシグネチャを取得する
+        sig = inspect.signature(f)
+        # 受け取ったパラメータをシグネチャにバインドする
+        bound_args = sig.bind(*args, **kwargs)
+        # 関数名やバインドしたパラメータの対応関係を取得する
+        func_name = f.__name__
+        func_args = ",".join(
+            "{k}={v}".format(k=k, v=v) for k, v in bound_args.arguments.items()
+        )
+        # ログに残す
+        fmt = "{func_name}({func_args}) -> {result}"
+        msg = fmt.format(func_name=func_name, func_args=func_args, result=result)
+        log_manager.logger.info(msg)
+        # 結果を返す
+        return result
+
+    return _recording
+
+
+@recording
 def bits_to_byte(value_bits: float) -> float:
     """bit から byte に変換する
 
@@ -28,6 +74,7 @@ def bits_to_byte(value_bits: float) -> float:
     return value_bits / 8
 
 
+@recording
 def change_order(value: float, value_prefix: ValuePrefix) -> float:
     """数値のオーダーを変換する
 
@@ -42,6 +89,7 @@ def change_order(value: float, value_prefix: ValuePrefix) -> float:
     return value / 10**value_prefix.value
 
 
+@recording
 def round_datetime(dt: datetime) -> datetime:
     """日時を丸める（15分単位）
 
@@ -67,8 +115,8 @@ def round_datetime(dt: datetime) -> datetime:
 
 
 def call_temp() -> None:
-    print(f"called {__name__}.")
+    log_manager.logger.info(f"called {__name__}.")
 
 
 if __name__ == "__main__":
-    print(f"{__file__} はモジュールをインポートして使ってください。")
+    log_manager.logger.info(f"{__file__} はモジュールをインポートして使ってください。")

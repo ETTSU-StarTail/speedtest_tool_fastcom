@@ -53,8 +53,8 @@ logger = logging.getLogger("basicLogger")
 
 
 def call_temp() -> None:
-    log_manager.logger.info(f"called {__name__}.")
+    logger.info(f"called {__name__}.")
 
 
 if __name__ == "__main__":
-    log_manager.logger.info(f"{__file__} はモジュールをインポートして使ってください。")
+    logger.info(f"{__file__} はモジュールをインポートして使ってください。")
