@@ -143,9 +143,5 @@ def round_datetime(dt: datetime) -> datetime:
     return rounded_dt
 
 
-def call_temp() -> None:
-    logmng.logger.info(f"called {__name__}.")
-
-
 if __name__ == "__main__":
     logmng.logger.info(f"{__file__} はモジュールをインポートして使ってください。")

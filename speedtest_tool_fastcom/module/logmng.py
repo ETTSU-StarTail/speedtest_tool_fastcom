@@ -52,9 +52,5 @@ logging.config.dictConfig(
 logger = logging.getLogger("basicLogger")
 
 
-def call_temp() -> None:
-    logger.info(f"called {__name__}.")
-
-
 if __name__ == "__main__":
     logger.info(f"{__file__} はモジュールをインポートして使ってください。")

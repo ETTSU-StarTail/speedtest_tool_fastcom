@@ -132,9 +132,5 @@ def record_to_csv(
         writer.writerow(record)
 
 
-def call_temp() -> None:
-    logmng.logger.info(f"called {__name__}.")
-
-
 if __name__ == "__main__":
     logmng.logger.info(f"{__file__} はモジュールをインポートして使ってください。")

@@ -213,9 +213,5 @@ def run_speedtest(convert_byte: bool) -> tuple[datetime, float, float]:
     return (test_datetime, download_speed, upload_speed)
 
 
-def call_temp() -> None:
-    logmng.logger.info(f"called {__name__}.")
-
-
 if __name__ == "__main__":
     logmng.logger.info(f"{__file__} はモジュールをインポートして使ってください。")
