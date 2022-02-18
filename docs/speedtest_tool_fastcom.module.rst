@@ -4,26 +4,26 @@ speedtest\_tool\_fastcom.module package
 Submodules
 ----------
 
-speedtest\_tool\_fastcom.module.file\_manager module
-----------------------------------------------------
+speedtest\_tool\_fastcom.module.logmng module
+---------------------------------------------
 
-.. automodule:: speedtest_tool_fastcom.module.file_manager
+.. automodule:: speedtest_tool_fastcom.module.logmng
    :members:
    :undoc-members:
    :show-inheritance:
 
-speedtest\_tool\_fastcom.module.graph module
---------------------------------------------
+speedtest\_tool\_fastcom.module.recorder module
+-----------------------------------------------
 
-.. automodule:: speedtest_tool_fastcom.module.graph
+.. automodule:: speedtest_tool_fastcom.module.recorder
    :members:
    :undoc-members:
    :show-inheritance:
 
-speedtest\_tool\_fastcom.module.log\_manager module
----------------------------------------------------
+speedtest\_tool\_fastcom.module.reporter module
+-----------------------------------------------
 
-.. automodule:: speedtest_tool_fastcom.module.log_manager
+.. automodule:: speedtest_tool_fastcom.module.reporter
    :members:
    :undoc-members:
    :show-inheritance:
