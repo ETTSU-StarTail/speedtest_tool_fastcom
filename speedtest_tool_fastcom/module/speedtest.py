@@ -1,13 +1,14 @@
 from __future__ import annotations
-import asyncio
 
+import asyncio
 import logging
 from datetime import datetime
 from typing import Any
+
 from pyppeteer import launch
 from pyppeteer.page import Request
 
-from speedtest_tool_fastcom.module import log_manager, utility
+from speedtest_tool_fastcom.module import logmng, utility
 
 
 async def handle_request(request: Request) -> Any:
@@ -65,7 +66,11 @@ async def get_network_info_from_fastcom() -> dict[str, float | str]:
 
     target_url: str = "https://fast.com/"
 
-    browser = await launch(logLevel=logging.WARNING)
+    browser = await launch(
+        {"args": ["--proxy-server=http://vproxy.cns.tayoreru.com:8080"]},
+        ignoreDefaultArgs=["--disable-extensions"],
+        logLevel=logging.WARNING,
+    )
     page = await browser.newPage()
 
     # リソースタイプを指定するため割り込みを有効にする
@@ -87,60 +92,60 @@ async def get_network_info_from_fastcom() -> dict[str, float | str]:
     user_ip: str = ""
 
     while not is_done:
-        download_speed: float = await page.evaluate(
+        download_speed = await page.evaluate(
             "(elm) => Number(elm.textContent.trim())",
             await page.querySelector("#speed-value"),
         )
 
-        download_units: str = await page.evaluate(
+        download_units = await page.evaluate(
             "(elm) => elm.textContent.trim()", await page.querySelector("#speed-units")
         )
 
-        downloaded: float = await page.evaluate(
+        downloaded = await page.evaluate(
             "(elm) => Number(elm.textContent.trim())",
             await page.querySelector("#down-mb-value"),
         )
 
-        upload_speed: float = await page.evaluate(
+        upload_speed = await page.evaluate(
             "(elm) => Number(elm.textContent.trim())",
             await page.querySelector("#upload-value"),
         )
 
-        upload_units: str = await page.evaluate(
+        upload_units = await page.evaluate(
             "(elm) => elm.textContent.trim()", await page.querySelector("#upload-units")
         )
 
-        uploaded: float = await page.evaluate(
+        uploaded = await page.evaluate(
             "(elm) => Number(elm.textContent.trim())",
             await page.querySelector("#up-mb-value"),
         )
 
-        latency: float = await page.evaluate(
+        latency = await page.evaluate(
             "(elm) => Number(elm.textContent.trim())",
             await page.querySelector("#latency-value"),
         )
 
-        buffer_bloat: float = await page.evaluate(
+        buffer_bloat = await page.evaluate(
             "(elm) => Number(elm.textContent.trim())",
             await page.querySelector("#bufferbloat-value"),
         )
 
-        user_location: str = await page.evaluate(
+        user_location = await page.evaluate(
             "(elm) => elm.textContent.trim()",
             await page.querySelector("#user-location"),
         )
 
-        user_ip: str = await page.evaluate(
+        user_ip = await page.evaluate(
             "(elm) => elm.textContent.trim()",
             await page.querySelector("#user-ip"),
         )
 
-        is_done: bool = (
+        is_done = (
             await page.querySelector("#speed-value.succeeded") is not None
             and await page.querySelector("#upload-value.succeeded") is not None
         )
 
-        log_manager.logger.info(
+        logmng.logger.info(
             {
                 "download_speed": download_speed,
                 "download_units": download_units,
@@ -175,9 +180,11 @@ async def get_network_info_from_fastcom() -> dict[str, float | str]:
 
 
 @utility.recording
-def run_speedtest() -> tuple[datetime, float, float]:
+def run_speedtest(convert_byte: bool) -> tuple[datetime, float, float]:
     """Fast.com によるネットワーク速度を計測し、計測結果を返す
 
+    Args:
+        convert_byte (bool): byte にするフラグ
     Returns:
         tuple[datetime, float, float]: 計測日時/ダウンロード速度[bit/s]/アップロード速度[bit/s]
     """
@@ -196,34 +203,19 @@ def run_speedtest() -> tuple[datetime, float, float]:
     upload_units = str(result["upload_units"])
 
     # bit に直す？
-    if download_units.upper().startswith("K"):
-        download_speed = download_speed * 10**utility.ValuePrefix.k.value
-    elif download_units.upper().startswith("M"):
-        download_speed = download_speed * 10**utility.ValuePrefix.M.value
-    elif download_units.upper().startswith("G"):
-        download_speed = download_speed * 10**utility.ValuePrefix.G.value
-    elif download_units.upper().startswith("T"):
-        download_speed = download_speed * 10**utility.ValuePrefix.T.value
-    else:
-        pass
+    download_speed = utility.clear_order(download_speed, download_units)
+    upload_speed = utility.clear_order(upload_speed, upload_units)
 
-    if upload_units.upper().startswith("K"):
-        upload_speed = upload_speed * 10**utility.ValuePrefix.k.value
-    elif upload_units.upper().startswith("M"):
-        upload_speed = upload_speed * 10**utility.ValuePrefix.M.value
-    elif upload_units.upper().startswith("G"):
-        upload_speed = upload_speed * 10**utility.ValuePrefix.G.value
-    elif upload_units.upper().startswith("T"):
-        upload_speed = upload_speed * 10**utility.ValuePrefix.T.value
-    else:
-        pass
+    if convert_byte:
+        download_speed = utility.bits_to_byte(download_speed)
+        upload_speed = utility.bits_to_byte(upload_speed)
 
     return (test_datetime, download_speed, upload_speed)
 
 
 def call_temp() -> None:
-    log_manager.logger.info(f"called {__name__}.")
+    logmng.logger.info(f"called {__name__}.")
 
 
 if __name__ == "__main__":
-    log_manager.logger.info(f"{__file__} はモジュールをインポートして使ってください。")
+    logmng.logger.info(f"{__file__} はモジュールをインポートして使ってください。")

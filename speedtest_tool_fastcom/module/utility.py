@@ -1,13 +1,14 @@
 from __future__ import annotations
 
 import functools
-
+import inspect
 from datetime import datetime, timedelta
 from enum import Enum
-import inspect
-from typing import Any
 
-from speedtest_tool_fastcom.module import log_manager
+from speedtest_tool_fastcom.module import logmng
+
+FORMAT_DATE_LONG: str = "%Y-%m-%d %H:%M:%S"
+FORMAT_DATE_SHORT: str = "%Y-%m-%d"
 
 
 class ValuePrefix(Enum):
@@ -23,7 +24,7 @@ class ValuePrefix(Enum):
     T = 12
 
 
-def recording(f: Any) -> Any:
+def recording(f):
     """関数 (メソッド) の呼び出しを記録するデコレータです。
 
     受け取ったパラメータと返り値をログに出力します。
@@ -38,7 +39,7 @@ def recording(f: Any) -> Any:
     """
 
     @functools.wraps(f)
-    def _recording(*args: Any, **kwargs: Any) -> Any:
+    def _recording(*args, **kwargs):
         # 表面上は元々の関数 (メソッド) がそのまま実行されたように振る舞う
         result = f(*args, **kwargs)
         # デコレーションする関数のシグネチャを取得する
@@ -51,9 +52,9 @@ def recording(f: Any) -> Any:
             "{k}={v}".format(k=k, v=v) for k, v in bound_args.arguments.items()
         )
         # ログに残す
-        fmt = "{func_name}({func_args}) -> {result}"
+        fmt = "★ called {func_name}({func_args}) -> {result}"
         msg = fmt.format(func_name=func_name, func_args=func_args, result=result)
-        log_manager.logger.info(msg)
+        logmng.logger.info(msg)
         # 結果を返す
         return result
 
@@ -90,6 +91,34 @@ def change_order(value: float, value_prefix: ValuePrefix) -> float:
 
 
 @recording
+def clear_order(value: float, units: str) -> float:
+    """値を指定の単位に合わせてオーダーを取り除く（kilo, mega とかを無くす）
+
+    Args:
+        value (float): 値
+        units (str): 値のオーダー（K, M, G, T）
+
+    Returns:
+        float: オーダーを除去した値
+    """
+
+    exponent: int = 1
+
+    if units.upper().startswith("K"):
+        exponent = ValuePrefix.k.value
+    elif units.upper().startswith("M"):
+        exponent = ValuePrefix.M.value
+    elif units.upper().startswith("G"):
+        exponent = ValuePrefix.G.value
+    elif units.upper().startswith("T"):
+        exponent = ValuePrefix.T.value
+    else:
+        pass
+
+    return value * 10**exponent
+
+
+@recording
 def round_datetime(dt: datetime) -> datetime:
     """日時を丸める（15分単位）
 
@@ -115,8 +144,8 @@ def round_datetime(dt: datetime) -> datetime:
 
 
 def call_temp() -> None:
-    log_manager.logger.info(f"called {__name__}.")
+    logmng.logger.info(f"called {__name__}.")
 
 
 if __name__ == "__main__":
-    log_manager.logger.info(f"{__file__} はモジュールをインポートして使ってください。")
+    logmng.logger.info(f"{__file__} はモジュールをインポートして使ってください。")

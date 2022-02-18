@@ -4,7 +4,7 @@ import logging
 import logging.config
 
 log_formatter = (
-    "%(levelname)s %(asctime)s - %(filename)s::%(module)s::%(funcName)s -> %(message)s"
+    "%(levelname)s %(asctime)s %(filename)s::%(module)s::%(funcName)s - %(message)s"
 )
 
 logging.config.dictConfig(
