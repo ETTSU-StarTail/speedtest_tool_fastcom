@@ -43,9 +43,13 @@ def main() -> None:
     プログラムの実行起点となり処理フローを制御する。
     """
 
-    logmng.logger.info("Start Program")
-
     args: Namespace = get_option()
+
+    logmng.set_logger(
+        os.path.abspath("{0}/log/speedtest_fastcom.log".format(args.save_path))
+    )
+
+    logmng.logger.info("Start Program")
 
     # オプション設定
     record_dir_path: str = "{0}/dest".format(args.save_path)
