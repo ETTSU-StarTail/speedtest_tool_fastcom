@@ -9,3 +9,5 @@ sphinx ビルドはリポジトリ直下から下記で。
 ```powershell
 .\make.bat html
 ```
+
+パッケージ管理は `poetry` を使用
